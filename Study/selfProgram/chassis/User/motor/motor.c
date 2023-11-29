@@ -17,10 +17,10 @@ extern CAN_HandleTypeDef hcan1;
 /* 电机初始化(PID初始化) */
 void motor_config(){
     CAN_FIleter_init();
-    PID_struct_init(&motor1.pid,1000,1000,1.5,0.1,0);
-    PID_struct_init(&motor2.pid,1000,1000,1.5,0.1,0);
-    PID_struct_init(&motor3.pid,1000,1000,1.5,0.1,0);
-    PID_struct_init(&motor4.pid,1000,1000,1.5,0.1,0);
+    PID_struct_init(&motor1.pid,1000,1000,8,0.1,0);
+    PID_struct_init(&motor2.pid,1000,1000,8,0.1,0);
+    PID_struct_init(&motor3.pid,1000,1000,8,0.1,0);
+    PID_struct_init(&motor4.pid,1000,1000,8,0.1,0);
 }
 
 /* 获取电机ID对应的电机数据指针 */
