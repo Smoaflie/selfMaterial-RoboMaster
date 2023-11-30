@@ -1,8 +1,9 @@
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file    stm32f4xx_it.h
-  * @brief   This file contains the headers of the interrupt handlers.
+  * @file           : main.h
+  * @brief          : Header for main.c file.
+  *                   This file contains the common defines of the application.
   ******************************************************************************
   * @attention
   *
@@ -13,17 +14,20 @@
   * in the root directory of this software component.
   * If no LICENSE file comes with this software, it is provided AS-IS.
   *
- ******************************************************************************
+  ******************************************************************************
   */
 /* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __STM32F4xx_IT_H
-#define __STM32F4xx_IT_H
+#ifndef __MAIN_H
+#define __MAIN_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
+
+/* Includes ------------------------------------------------------------------*/
+#include "stm32f4xx_hal.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -46,22 +50,38 @@
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
-void NMI_Handler(void);
-void HardFault_Handler(void);
-void MemManage_Handler(void);
-void BusFault_Handler(void);
-void UsageFault_Handler(void);
-void SVC_Handler(void);
-void DebugMon_Handler(void);
-void PendSV_Handler(void);
-void SysTick_Handler(void);
-void DMA1_Stream1_IRQHandler(void);
+void Error_Handler(void);
+
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */
+
+/* Private defines -----------------------------------------------------------*/
+#define LED_R_Pin GPIO_PIN_12
+#define LED_R_GPIO_Port GPIOH
+#define LED_G_Pin GPIO_PIN_11
+#define LED_G_GPIO_Port GPIOH
+#define LED_B_Pin GPIO_PIN_10
+#define LED_B_GPIO_Port GPIOH
+#define KEY_Pin GPIO_PIN_0
+#define KEY_GPIO_Port GPIOA
+#define CS1_ACCEL_Pin GPIO_PIN_4
+#define CS1_ACCEL_GPIO_Port GPIOA
+#define INT1_Accel_Pin GPIO_PIN_4
+#define INT1_Accel_GPIO_Port GPIOC
+#define INT1_Gyro_Pin GPIO_PIN_5
+#define INT1_Gyro_GPIO_Port GPIOC
+#define SPI2_CS_Pin GPIO_PIN_12
+#define SPI2_CS_GPIO_Port GPIOB
+#define CS1_Gyro_Pin GPIO_PIN_0
+#define CS1_Gyro_GPIO_Port GPIOB
+
+/* USER CODE BEGIN Private defines */
+
+/* USER CODE END Private defines */
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __STM32F4xx_IT_H */
+#endif /* __MAIN_H */
