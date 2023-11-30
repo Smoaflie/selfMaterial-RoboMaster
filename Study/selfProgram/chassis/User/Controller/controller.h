@@ -60,6 +60,7 @@ typedef enum{
     RC_KEY              //按键
 }RC_DataType;
 
+extern RC_DataTypeDef RC_CtrlData;
 extern uint8_t RC_RxBuffer[18];
 
 //接收处理控制器数据-放在接收中断中
@@ -67,5 +68,7 @@ void RC_RecevieAnalysis(uint8_t *pData);
 
 //供其他函数获取控制器数据
 uint16_t RC_GetData(RC_DataType type);
+
+void RC_CtrlChassis(void);
 
 #endif //!__CONTROLLER_H

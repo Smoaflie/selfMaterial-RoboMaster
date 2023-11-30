@@ -4,7 +4,7 @@
 #include "main.h"
 
 #include "usart.h"
-
+#include "can.h"
 int usr_main(void);
 
 #endif // !__USR_MAIN_H_

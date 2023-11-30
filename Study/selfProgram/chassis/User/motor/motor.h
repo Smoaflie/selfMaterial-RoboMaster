@@ -25,4 +25,6 @@ void motor_can_send_control_current(void);
 void motor_rotate_speed_set(uint32_t input_motor_id,uint16_t rotate_speed);
 void motor_control_current_set_direct(uint32_t input_motor_id,uint16_t value);
 
+void Mecanum_GO(float speed,float radian,float vo);
+
 #endif //__MOTOR_H

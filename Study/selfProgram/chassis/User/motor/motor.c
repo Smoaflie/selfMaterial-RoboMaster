@@ -13,6 +13,10 @@
 ElectricMotor motor1,motor2,motor3,motor4;
 
 extern CAN_HandleTypeDef hcan1;
+uint16_t relativeRadian = 0;  //底盘云台相对弧度
+
+#define mecanum_W 0.2 //机器人左右麦轮距离
+#define mecanum_H 0.2 //机器人前后麦轮距离
 
 /* 电机初始化(PID初始化) */
 void motor_config(){
@@ -93,4 +97,26 @@ void motor_control_current_set_direct(uint32_t input_motor_id,uint16_t value){
 void motor_rotate_speed_set(uint32_t input_motor_id,uint16_t rotate_speed){
     ElectricMotor* motor_id = motor_getID(input_motor_id);
     motor_id->motor_target_rotate_speed=rotate_speed;
+}
+
+
+/************************************************************
+ * @brief 控制麦克纳姆轮组底盘移动
+ * 
+ * @param speed 前进速度
+ * @param radian 前进方向-弧度（以X轴正半轴为起始轴，逆时针增大）
+ * @param vo 机器人绕O点旋转速度，逆时针为正 rad/s
+************************************************************/
+void Mecanum_GO(float speed,float radian,float vo){
+    float vx = speed * cos(radian-relativeRadian);  //
+    float vy = speed * sin(radian-relativeRadian);
+    uint16_t v1,v2,v3,v4;   //对应四个电机
+    /* 电机顺序（电机前转时：A朝右上，B朝左上）
+       B2---C3
+       A1---D4
+    */
+   v1 = vx+vy-vo*(mecanum_W/2+mecanum_H/2);
+   v2 = vx-vy-vo*(mecanum_W/2+mecanum_H/2);
+   v3 = vx+vy+vo*(mecanum_W/2+mecanum_H/2);
+   v4 = vx-vy+vo*(mecanum_W/2+mecanum_H/2);
 }

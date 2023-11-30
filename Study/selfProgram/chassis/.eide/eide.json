@@ -140,7 +140,8 @@
           ".eide/deps",
           "User",
           "User/Controller",
-          "User/motor"
+          "User/motor",
+          "User/Gyro"
         ],
         "libList": [],
         "sourceDirList": [],

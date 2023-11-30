@@ -98,3 +98,25 @@ uint16_t RC_GetData(RC_DataType type){
     }
 }
 
+/* 通过控制器操控前进方向 */
+void RC_CtrlChassis(void){
+    uint16_t L_speed=1000; //低速模式转速
+    uint16_t H_speed=3000; //高速模式转速
+
+
+   uint8_t PULLROD_flag = RC_GetData(RC_PULLROD);
+   switch(PULLROD_flag){
+      case 0b00100010:  //双上
+         Mecanum_GO(L_speed*RC_CtrlData.Ctrl.ROCKER_L/100,RC_CtrlData.Ctrl.ROCKER_L_DEG,0);
+         break;
+      case 0b01000100:  //双下
+         Mecanum_GO(0,0,0);
+         break;
+      case 0b00101000:  //左上右中
+         Mecanum_GO(H_speed*RC_CtrlData.Ctrl.ROCKER_L/100,RC_CtrlData.Ctrl.ROCKER_L_DEG,0);
+         break;
+      case 0b00100100:  //左上右下
+         Mecanum_GO(L_speed*RC_CtrlData.Ctrl.ROCKER_L/100,RC_CtrlData.Ctrl.ROCKER_L_DEG,0);
+         break;
+   }
+}
