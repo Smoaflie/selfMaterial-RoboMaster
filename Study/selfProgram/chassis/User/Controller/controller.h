@@ -2,11 +2,13 @@
  * @file controller.h
  * @author Smoaflie
  * @brief 使用DBUF通信接收控制器DT7数据
- * @version 1.0
+ * @version 2.0
  * @date 2023-11-29
  * @note C板已通过硬件将DBUF转化为UART信号
  *       大部分代码来自于官方文档-《RoboMaster 机器人专用遥控器（接收机）用户手册》
  *       1.0版本由于未使用鼠标，未添加相关代码，待补充ing
+ *       2.0版本修改：添加控制底盘相关代码
+ *       可直接获取角度值，角度以y轴正方向为起始点，逆时针增大
  * @copyright GNU General Public License v3.0
 ************************************************************/
 #ifndef __CONTROLLER_H

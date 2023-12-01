@@ -47,8 +47,8 @@ typedef struct __pid_t
     uint32_t IntegralLimit; // 积分限幅
 
     void (*f_param_init)(struct __pid_t *pid, // PID参数初始化
-                         uint32_t maxOutput,
-                         uint32_t integralLimit,
+                         float maxOutput,
+                         float integralLimit,
                          float p,
                          float i,
                          float d);

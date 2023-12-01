@@ -16,14 +16,14 @@ int usr_main(void){
 
     // ! NOTE:while死循环不能删除
     while(1){
-        
-        // aRC_ROCKER_L = RC_GetData(RC_ROCKER_L);
-        // aRC_ROCKER_L_DEG= RC_GetData(RC_ROCKER_L_DEG);
-        // aRC_ROCKER_R= RC_GetData(RC_ROCKER_R);
-        // aRC_ROCKER_R_DEG= RC_GetData(RC_ROCKER_R_DEG);
-        // aRC_PULLROD= RC_GetData(RC_PULLROD);
-        // aRC_KEY= RC_GetData(RC_KEY);
-        // motor_rotate_speed_set(1,3000*aRC_ROCKER_L/100);
+        gyro_calData();
+        aRC_ROCKER_L = RC_GetData(RC_ROCKER_L);
+        aRC_ROCKER_L_DEG= RC_GetData(RC_ROCKER_L_DEG);
+        aRC_ROCKER_R= RC_GetData(RC_ROCKER_R);
+        aRC_ROCKER_R_DEG= RC_GetData(RC_ROCKER_R_DEG);
+        aRC_PULLROD= RC_GetData(RC_PULLROD);
+        aRC_KEY= RC_GetData(RC_KEY);
+        RC_CtrlChassis();
     }
     
 }

@@ -14,8 +14,8 @@ void abs_limit(float *a, float ABS_MAX)
 
 /*参数初始化*/
 static void pid_param_init(struct __pid_t *pid, // PID参数初始化
-                           uint32_t maxOutput,
-                           uint32_t integralLimit,
+                           float maxOutput,
+                           float integralLimit,
                            float p,
                            float i,
                            float d)

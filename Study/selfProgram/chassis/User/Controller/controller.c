@@ -1,10 +1,11 @@
 #include "controller.h"
 #include <math.h>
+#include "motor.h"
+#include "gyro.h"
 
 RC_DataTypeDef RC_CtrlData;
 uint8_t RC_RxBuffer[18];
 
-#define M_PI 3.1416
 #define ABS(x) (x>0?x:-x)
 
 // 计算距离原点的距离
@@ -14,11 +15,11 @@ static double calculateDistance(uint16_t x_t, uint16_t y_t) {
     return sqrt(x * x + y * y)*100;
 }
 
-// 计算相对于 x 轴正半轴的弧度（逆时针为正）
+// 计算相对于 y 轴正半轴的弧度（逆时针为正）
 static double calculateRadian(uint16_t x_t, uint16_t y_t) {
     double x = x_t-1024;
     double y = (y_t-1024);
-    double radian = atan2(y, x);
+    double radian = atan2(y, x) - M_PI/2.0;
     if (radian < 0) {
         radian += 2*M_PI; // 将角度转换为正值
     }
@@ -103,20 +104,29 @@ void RC_CtrlChassis(void){
     uint16_t L_speed=1000; //低速模式转速
     uint16_t H_speed=3000; //高速模式转速
 
-
    uint8_t PULLROD_flag = RC_GetData(RC_PULLROD);
    switch(PULLROD_flag){
-      case 0b00100010:  //双上
-         Mecanum_GO(L_speed*RC_CtrlData.Ctrl.ROCKER_L/100,RC_CtrlData.Ctrl.ROCKER_L_DEG,0);
+      case 0b00100010:  //双上 云台底盘能被正常控制，且底盘速度为正常模式
+         chasis_run(L_speed*RC_GetData(RC_ROCKER_L)/100,RC_CtrlData.Ctrl.ROCKER_L_DEG,0,RC_CtrlData.Ctrl.ROCKER_R_DEG);
+         PTZ_turn(RC_CtrlData.Ctrl.ROCKER_R_DEG);
          break;
-      case 0b01000100:  //双下
-         Mecanum_GO(0,0,0);
+      case 0b01000100:  //双下 云台无力，底盘速度保持为 0
+         Mecanum_GO(0,0,0,0);
          break;
-      case 0b00101000:  //左上右中
-         Mecanum_GO(H_speed*RC_CtrlData.Ctrl.ROCKER_L/100,RC_CtrlData.Ctrl.ROCKER_L_DEG,0);
+      case 0b00101000:  //左上右中 底盘速度为高速模式
+         chasis_run(H_speed*RC_GetData(RC_ROCKER_L)/100,RC_CtrlData.Ctrl.ROCKER_L_DEG,0,RC_CtrlData.Ctrl.ROCKER_R_DEG);
+         PTZ_turn(RC_CtrlData.Ctrl.ROCKER_R_DEG);
          break;
-      case 0b00100100:  //左上右下
-         Mecanum_GO(L_speed*RC_CtrlData.Ctrl.ROCKER_L/100,RC_CtrlData.Ctrl.ROCKER_L_DEG,0);
+      case 0b00100100:  //左上右下 底盘小陀螺模式
+         Mecanum_GO(L_speed*RC_GetData(RC_ROCKER_L)/100,RC_CtrlData.Ctrl.ROCKER_L_DEG,50000*RC_GetData(RC_ROCKER_R)/100,gyro_getYAW());
+         PTZ_turn(RC_CtrlData.Ctrl.ROCKER_R_DEG);
+         break;
+      case 0b10000010:  //左中右上 自由移动云台
+         Mecanum_GO(0,0,0,0);
+         motor_rotate_radian_set(5,RC_CtrlData.Ctrl.ROCKER_R_DEG);
+         break;
+      case 0b10001000:  //双中 重新设置方向
+         gyro_setCurRadian();
          break;
    }
 }
