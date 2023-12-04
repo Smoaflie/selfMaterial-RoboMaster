@@ -64,16 +64,18 @@ int16_t pid_calc(pid_t *pid, float get, float set)
     if (pid->deadband != 0 && ABS(pid->err[NOW]) < pid->deadband)
         return 0;
 
-    pid->pout = pid->p * (pid->err[NOW] - pid->err[LAST]);
-    pid->iout = pid->i * pid->err[NOW];
+    pid->pout = pid->p * pid->err[NOW];
+    // pid->pout = pid->p * (pid->err[NOW] - pid->err[LAST]);
+    pid->iout += pid->i * pid->err[NOW];
     pid->dout = pid->d * (pid->err[NOW] - 2 * pid->err[LAST] + pid->err[LLAST]);
     abs_limit(&(pid->iout), pid->IntegralLimit);
 
     pid->delta_u = pid->pout + pid->iout + pid->dout;
-    pid->delta_out = pid->last_delta_out + pid->delta_u;
-    abs_limit(&(pid->delta_out), pid->MaxOutput);
+    abs_limit(&(pid->delta_u), pid->MaxOutput);
+    // pid->delta_out = pid->last_delta_out + pid->delta_u;
+    // abs_limit(&(pid->delta_out), pid->MaxOutput);
 
-    pid->last_delta_out = pid->delta_out; // update last time
+    // pid->last_delta_out = pid->delta_out; // update last time
 
     pid->err[LLAST] = pid->err[LAST];
     pid->err[LAST] = pid->err[NOW];
@@ -82,5 +84,6 @@ int16_t pid_calc(pid_t *pid, float get, float set)
     pid->set[LLAST] = pid->set[LAST];
     pid->set[LAST] = pid->set[NOW];
 
-    return (int16_t)pid->delta_out;
+    // return (int16_t)pid->delta_out;
+    return (int16_t)pid->delta_u;
 }

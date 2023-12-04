@@ -72,6 +72,10 @@ void RC_RecevieAnalysis(uint8_t *pData){
     RC_CtrlData.Ctrl.ROCKER_R_DEG=calculateRadian(RC_CtrlData.rc.ch0,RC_CtrlData.rc.ch1);
     RC_CtrlData.Ctrl.ROCKER_L=calculateDistance(RC_CtrlData.rc.ch2,RC_CtrlData.rc.ch3)/(660/cos(limitRadian(RC_CtrlData.Ctrl.ROCKER_L_DEG)));
     RC_CtrlData.Ctrl.ROCKER_R=calculateDistance(RC_CtrlData.rc.ch0,RC_CtrlData.rc.ch1)/(660/cos(limitRadian(RC_CtrlData.Ctrl.ROCKER_R_DEG)));
+
+    /* 人造死区 */
+    if(RC_CtrlData.Ctrl.ROCKER_L==0)    RC_CtrlData.Ctrl.ROCKER_L_DEG=0;
+    if(RC_CtrlData.Ctrl.ROCKER_R==0)    RC_CtrlData.Ctrl.ROCKER_R_DEG=0;
 }
 
 /************************************************************
@@ -101,32 +105,50 @@ uint16_t RC_GetData(RC_DataType type){
 
 /* 通过控制器操控前进方向 */
 void RC_CtrlChassis(void){
-    uint16_t L_speed=1000; //低速模式转速
-    uint16_t H_speed=3000; //高速模式转速
-
-   uint8_t PULLROD_flag = RC_GetData(RC_PULLROD);
+    static uint16_t l_v=0;
+    static uint16_t L_speed=1000; //低速模式转速
+    static uint16_t H_speed=3000; //高速模式转速
+    static uint8_t PULLROD_flag ;
+    static uint16_t aRC_ROCKER_R_DEG;
+    PULLROD_flag = RC_GetData(RC_PULLROD);
+    aRC_ROCKER_R_DEG= RC_GetData(RC_ROCKER_R_DEG);
    switch(PULLROD_flag){
       case 0b00100010:  //双上 云台底盘能被正常控制，且底盘速度为正常模式
-         chasis_run(L_speed*RC_GetData(RC_ROCKER_L)/100,RC_CtrlData.Ctrl.ROCKER_L_DEG,0,RC_CtrlData.Ctrl.ROCKER_R_DEG);
-         PTZ_turn(RC_CtrlData.Ctrl.ROCKER_R_DEG);
+        gimbalFLAG=gimbal_FOLLOW;
+        chasis_run(L_speed*RC_GetData(RC_ROCKER_L)/100,RC_CtrlData.Ctrl.ROCKER_L_DEG);
+        if(RC_GetData(RC_ROCKER_R)>50)  {PTZ_turn(aRC_ROCKER_R_DEG);l_v=aRC_ROCKER_R_DEG;}
+        else{PTZ_turn(l_v);}
+        //  PTZ_turn(RC_CtrlData.Ctrl.ROCKER_R_DEG);
          break;
       case 0b01000100:  //双下 云台无力，底盘速度保持为 0
          Mecanum_GO(0,0,0,0);
+         gimbalFLAG=gimbal_OFF;
          break;
       case 0b00101000:  //左上右中 底盘速度为高速模式
-         chasis_run(H_speed*RC_GetData(RC_ROCKER_L)/100,RC_CtrlData.Ctrl.ROCKER_L_DEG,0,RC_CtrlData.Ctrl.ROCKER_R_DEG);
-         PTZ_turn(RC_CtrlData.Ctrl.ROCKER_R_DEG);
+        gimbalFLAG=gimbal_FOLLOW;
+         chasis_run(H_speed*RC_GetData(RC_ROCKER_L)/100,RC_CtrlData.Ctrl.ROCKER_L_DEG);
+        if(RC_GetData(RC_ROCKER_R)>50)  {motor_rotate_radian_set(5,aRC_ROCKER_R_DEG);l_v=aRC_ROCKER_R_DEG;}
+        else{motor_rotate_radian_set(5,l_v);}
+        //  PTZ_turn(RC_CtrlData.Ctrl.ROCKER_R_DEG);
          break;
       case 0b00100100:  //左上右下 底盘小陀螺模式
-         Mecanum_GO(L_speed*RC_GetData(RC_ROCKER_L)/100,RC_CtrlData.Ctrl.ROCKER_L_DEG,50000*RC_GetData(RC_ROCKER_R)/100,gyro_getYAW());
-         PTZ_turn(RC_CtrlData.Ctrl.ROCKER_R_DEG);
+        gimbalFLAG=gimbal_ON;
+         Mecanum_GO(L_speed*RC_GetData(RC_ROCKER_L)/100,RC_CtrlData.Ctrl.ROCKER_L_DEG,50000*RC_GetData(RC_ROCKER_R)/100,gyro_getYAW()-RC_CtrlData.Ctrl.ROCKER_R_DEG);
+        if(RC_GetData(RC_ROCKER_R)>50)  {motor_rotate_radian_set(5,aRC_ROCKER_R_DEG);l_v=aRC_ROCKER_R_DEG;}
+        else{motor_rotate_radian_set(5,l_v);}
+        //  PTZ_turn(RC_CtrlData.Ctrl.ROCKER_R_DEG);
          break;
       case 0b10000010:  //左中右上 自由移动云台
+      gimbalFLAG=gimbal_HOLD;
          Mecanum_GO(0,0,0,0);
          motor_rotate_radian_set(5,RC_CtrlData.Ctrl.ROCKER_R_DEG);
          break;
       case 0b10001000:  //双中 重新设置方向
+      gimbalFLAG=gimbal_OFF;
          gyro_setCurRadian();
+         PTZ_mainSet();
+         motor_rotate_radian_set(5,0);l_v=0;
          break;
    }
 }
+

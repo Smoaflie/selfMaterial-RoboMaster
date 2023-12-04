@@ -20,6 +20,16 @@ typedef struct __ElectricMotor{
 
     pid_t pid;  //pid控制参数
 }ElectricMotor;
+typedef enum{
+    gimbal_ON = 0,
+    gimbal_OFF,
+    gimbal_ROTATE,  //旋转
+    gimbal_HOLD,    //保持
+    gimbal_FOLLOW   //跟随
+}_gimbalFLAG;   //云台状态标识
+
+extern _gimbalFLAG gimbalFLAG;
+extern ElectricMotor motor[6];
 
 void motor_config();
 void motor_DataHandle(uint32_t input_motor_id,uint8_t* data);
@@ -32,7 +42,10 @@ void motor_control_voltage_set(ElectricMotor* motor_id);
 void motor_rotate_radian_set(uint32_t input_motor_id,int16_t angle);
 
 void Mecanum_GO(float speed,float radian,float vo,float deviation);
-void chasis_run(float speed,float radian,float deviation,float car_radian);
-void PTZ_turn(float radian);
-
+void chasis_run(float speed,float radian);
+void PTZ_turn(float angle);
+void PTZ_mainSet(void);
+int16_t PTZ_Get(void);
+float PTZ_RadianGet(void);
+float PTZ_mainRadianGet(void);
 #endif //__MOTOR_H

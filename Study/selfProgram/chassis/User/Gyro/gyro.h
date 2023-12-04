@@ -9,4 +9,7 @@ void gyro_init(void);
 void gyro_setCurRadian(void);
 void gyro_calData(void);
 float gyro_getYAW(void);
+
+float kalmanFilter(float measurement);
+void gyro_offset_calc(fp32 gyro_offset[3], fp32 gyro[3]);
 #endif // !__GYRO_H_
