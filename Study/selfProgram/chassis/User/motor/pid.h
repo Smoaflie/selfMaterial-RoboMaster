@@ -11,7 +11,7 @@
 #ifndef __PID_H
 #define __PID_H
 
-#include "main.h"
+#include "usr_main.h"
 
 enum
 {
@@ -41,7 +41,7 @@ typedef struct __pid_t
     float last_delta_out;
 
     float max_err;
-    float deadband; // err < deadband return
+    float deadband; // 死区 err < deadband return
 
     uint32_t MaxOutput;     // 输出限幅
     uint32_t IntegralLimit; // 积分限幅
@@ -49,6 +49,7 @@ typedef struct __pid_t
     void (*f_param_init)(struct __pid_t *pid, // PID参数初始化
                          float maxOutput,
                          float integralLimit,
+                         float deadband,
                          float p,
                          float i,
                          float d);
@@ -58,9 +59,12 @@ void PID_struct_init(
     pid_t *pid,
     uint32_t maxout,
     uint32_t intergral_limit,
+    float deadband,
 
     float kp,
     float ki,
     float kd);
-int16_t pid_calc(pid_t *pid, float get, float set);
+
+float pid_calc(pid_t *pid, float get, float set);
+float pid_calc_circle(pid_t *pid, float get, float set, float limit);
 #endif //__PID_H

@@ -2,11 +2,14 @@
 #define __MOTOR_H
 
 #include "usr_main.h"
+
 #include "pid.h"
+
 typedef enum{
-    MotorSpeed = 0, //控制角度
-    MotorRadian     //控制弧度
+    MotorChassis = 0, //底盘电机
+    MotorGimbal     //云台电机
 }MotorType; //电机调节目的
+
 typedef struct __ElectricMotor{
     MotorType type;
     uint16_t rotor_mechanical_angle;//转子机械角度：0~8191（对应0~360°）
@@ -16,36 +19,29 @@ typedef struct __ElectricMotor{
 
     int16_t motor_control_current;//控制电流
 
-    int16_t motor_target;//目标转速
+    float motor_target;//目标值
 
     pid_t pid;  //pid控制参数
-}ElectricMotor;
-typedef enum{
-    gimbal_ON = 0,
-    gimbal_OFF,
-    gimbal_ROTATE,  //旋转
-    gimbal_HOLD,    //保持
-    gimbal_FOLLOW   //跟随
-}_gimbalFLAG;   //云台状态标识
 
-extern _gimbalFLAG gimbalFLAG;
-extern ElectricMotor motor[6];
+    uint8_t stop_flag; //急停标志位
+}ElectricMotor;
+
+extern ElectricMotor chassis_motor[5];
+extern ElectricMotor gimbal_yaw_motor,gimbal_pitch_motor;
 
 void motor_config();
-void motor_DataHandle(uint32_t input_motor_id,uint8_t* data);
-void motor_data_analyze(ElectricMotor* motor_id,uint8_t* data);
-void motor_control_current_set(ElectricMotor* motor_id);
-void motor_can_send_control_current(void);
-void motor_rotate_speed_set(uint32_t input_motor_id,int16_t rotate_speed);
-void motor_control_current_set_direct(uint32_t input_motor_id,uint16_t value);
-void motor_control_voltage_set(ElectricMotor* motor_id);
-void motor_rotate_radian_set(uint32_t input_motor_id,int16_t angle);
+void motor_dataHandle(uint32_t input_motor_id,uint8_t* data);
+void motor_data_analyze(ElectricMotor* motor_id,uint8_t data[]);
 
-void Mecanum_GO(float speed,float radian,float vo,float deviation);
-void chasis_run(float speed,float radian);
-void PTZ_turn(float angle);
-void PTZ_mainSet(void);
-int16_t PTZ_Get(void);
-float PTZ_RadianGet(void);
-float PTZ_mainRadianGet(void);
+void motor_rotate_speed_set(uint32_t input_motor_id,float rotate_speed);
+void motor_targetSpeedSet_ByANGLE(uint32_t input_motor_id,float angle_t);
+
+void motor_control_current_set(ElectricMotor* motor_id);
+
+void motor_can_send_control_current(void);
+
+
+
+void car_run(void);
+
 #endif //__MOTOR_H
