@@ -19,5 +19,4 @@ float gyro_getPitch(void);
 float gyro_getPitchGyro(void);
 float gyro_getYawGyro(void);
 
-
 #endif // !__GYRO_H_

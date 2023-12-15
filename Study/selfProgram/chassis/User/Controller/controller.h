@@ -69,9 +69,12 @@ extern uint8_t RC_RxBuffer[18];
 void RC_RecevieAnalysis(uint8_t *pData);
 
 //供其他函数获取控制器数据
+void RC_DataAnalyse_toPolar(void);
 uint16_t RC_GetData(RC_DataType type);
 
 //放在进程中控制车辆运动
-void RC_CtrlChassis(void);
+void RC_CtrlCar(void);
+
+void controller_task(void);
 
 #endif //!__CONTROLLER_H

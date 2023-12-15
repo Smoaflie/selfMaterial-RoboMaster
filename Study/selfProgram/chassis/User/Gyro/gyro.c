@@ -119,3 +119,24 @@ void gyro_offset_calc(fp32 gyro_offset[3], fp32 gyro[3])
         gyro_offset[2] = gyro_offset[2] + 0.0001f * gyro[2];
     }
 }
+
+/* 陀螺仪任务 在freertos中 */
+void gyro_task(void){
+    gyro_calData();
+}
+
+void _GyroTask(void *argument)
+{
+  /* USER CODE BEGIN _GyroTask */
+  /* Infinite loop */
+  for(;;)
+  {
+    gyro_task();
+
+    vTaskResume(GimbalTaskHandle);
+    vTaskResume(ChassisTaskHandle);
+    vTaskSuspend(NULL);
+    // osDelay(1);
+  }
+  /* USER CODE END _GyroTask */
+}

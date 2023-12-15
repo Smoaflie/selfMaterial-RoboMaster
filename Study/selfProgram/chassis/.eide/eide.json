@@ -3,97 +3,15 @@
   "type": "ARM",
   "dependenceList": [],
   "srcDirs": [
-    ".eide/deps",
     "Core",
+    "Middlewares",
     "Drivers",
     "User"
   ],
   "virtualFolder": {
     "name": "<virtual_root>",
     "files": [],
-    "folders": [
-      {
-        "name": "Drivers",
-        "files": [],
-        "folders": [
-          {
-            "name": "STM32F4xx_HAL_Driver",
-            "files": [
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c"
-              },
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c"
-              },
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c"
-              },
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c"
-              },
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c"
-              },
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c"
-              },
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c"
-              },
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c"
-              },
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c"
-              },
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c"
-              },
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c"
-              },
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c"
-              },
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c"
-              },
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c"
-              },
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c"
-              },
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c"
-              },
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c"
-              },
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c"
-              },
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c"
-              },
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c"
-              },
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c"
-              },
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c"
-              },
-              {
-                "path": "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.c"
-              }
-            ],
-            "folders": []
-          }
-        ]
-      }
-    ]
+    "folders": []
   },
   "outDir": "build",
   "deviceName": null,
@@ -103,6 +21,83 @@
   },
   "targets": {
     "Debug": {
+      "excludeList": [],
+      "toolchain": "GCC",
+      "compileConfig": {
+        "cpuType": "Cortex-M4",
+        "floatingPointHardware": "single",
+        "scatterFilePath": "",
+        "useCustomScatterFile": true,
+        "storageLayout": {
+          "RAM": [],
+          "ROM": []
+        },
+        "options": "null"
+      },
+      "uploader": "JLink",
+      "uploadConfig": {
+        "bin": "",
+        "baseAddr": "",
+        "cpuInfo": {
+          "vendor": "ST",
+          "cpuName": "STM32F407IG"
+        },
+        "proType": 1,
+        "speed": 8000,
+        "otherCmds": ""
+      },
+      "uploadConfigMap": {
+        "JLink": {
+          "bin": "",
+          "baseAddr": "",
+          "cpuInfo": {
+            "vendor": "ST",
+            "cpuName": "STM32F407IG"
+          },
+          "proType": 1,
+          "speed": 8000,
+          "otherCmds": ""
+        },
+        "STLink": {
+          "bin": "",
+          "proType": "SWD",
+          "resetMode": "default",
+          "runAfterProgram": true,
+          "speed": 4000,
+          "address": "0x08000000",
+          "elFile": "None",
+          "optionBytes": ".eide/debug.st.option.bytes.ini",
+          "otherCmds": ""
+        }
+      },
+      "custom_dep": {
+        "name": "default",
+        "incList": [
+          "Core/Inc",
+          "Drivers/STM32F4xx_HAL_Driver/Inc",
+          "Drivers/STM32F4xx_HAL_Driver/Inc/Legacy",
+          "Drivers/CMSIS/Device/ST/STM32F4xx/Include",
+          "Drivers/CMSIS/Include",
+          "Middlewares/Third_Party/FreeRTOS/Source/include",
+          "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2",
+          "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F",
+          "User",
+          "User/motor",
+          "User/Gyro",
+          "User/Gimbal",
+          "User/Controller",
+          "User/Chassis"
+        ],
+        "libList": [],
+        "sourceDirList": [],
+        "defineList": [
+          "DEBUG",
+          "USE_HAL_DRIVER",
+          "STM32F407xx"
+        ]
+      }
+    },
+    "Release": {
       "excludeList": [],
       "toolchain": "GCC",
       "compileConfig": {
@@ -156,62 +151,13 @@
         "name": "default",
         "incList": [
           "Core/Inc",
-          "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Inc",
-          "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy",
-          "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/CMSIS/Device/ST/STM32F4xx/Include",
-          "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/CMSIS/Include",
-          ".eide/deps",
-          "User",
-          "User/Controller",
-          "User/motor",
-          "User/Gyro",
-          "User/Chassis",
-          "User/Gimbal"
-        ],
-        "libList": [],
-        "sourceDirList": [],
-        "defineList": [
-          "DEBUG",
-          "USE_HAL_DRIVER",
-          "STM32F407xx"
-        ]
-      }
-    },
-    "Release": {
-      "excludeList": [],
-      "toolchain": "GCC",
-      "compileConfig": {
-        "cpuType": "Cortex-M3",
-        "floatingPointHardware": "none",
-        "scatterFilePath": "",
-        "useCustomScatterFile": true,
-        "storageLayout": {
-          "RAM": [],
-          "ROM": []
-        },
-        "options": "null"
-      },
-      "uploader": "JLink",
-      "uploadConfig": {
-        "bin": "",
-        "baseAddr": "",
-        "cpuInfo": {
-          "vendor": "null",
-          "cpuName": "null"
-        },
-        "proType": 1,
-        "speed": 8000,
-        "otherCmds": ""
-      },
-      "uploadConfigMap": {},
-      "custom_dep": {
-        "name": "default",
-        "incList": [
-          "Core/Inc",
-          "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Inc",
-          "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy",
-          "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/CMSIS/Device/ST/STM32F4xx/Include",
-          "C:/Users/xiang/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/CMSIS/Include"
+          "Drivers/STM32F4xx_HAL_Driver/Inc",
+          "Drivers/STM32F4xx_HAL_Driver/Inc/Legacy",
+          "Drivers/CMSIS/Device/ST/STM32F4xx/Include",
+          "Drivers/CMSIS/Include",
+          "Middlewares/Third_Party/FreeRTOS/Source/include",
+          "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2",
+          "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F"
         ],
         "defineList": [
           "USE_HAL_DRIVER",

@@ -4,6 +4,7 @@
 #include "usr_main.h"
 
 #include "pid.h"
+#include "usr_CAN.h"
 
 typedef enum{
     MotorChassis = 0, //底盘电机
@@ -32,6 +33,8 @@ extern ElectricMotor gimbal_yaw_motor,gimbal_pitch_motor;
 void motor_config();
 void motor_dataHandle(uint32_t input_motor_id,uint8_t* data);
 void motor_data_analyze(ElectricMotor* motor_id,uint8_t data[]);
+
+ElectricMotor* motor_getID(uint32_t input_motor_id);
 
 void motor_rotate_speed_set(uint32_t input_motor_id,float rotate_speed);
 void motor_targetSpeedSet_ByANGLE(uint32_t input_motor_id,float angle_t);

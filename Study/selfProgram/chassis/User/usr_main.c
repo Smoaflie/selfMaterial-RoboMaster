@@ -13,7 +13,7 @@ int usr_main(void)
     PTZ_mainSet(); // 设定云台初始轴
 
     while (1) {
-        RC_CtrlChassis();
+        RC_CtrlCar();
         car_run();
     }
 }
@@ -42,4 +42,21 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
             motor_dataHandle(CAN_Rx_Message.StdId - 0x200, CAN_Rx_Data);
         }
     }
+}
+
+/* 初始化任务 在freeRTOS中 */
+void _InitTask(void *argument)
+{
+  /* USER CODE BEGIN _InitTask */
+  /* Infinite loop */
+  for(;;)
+  {
+    HAL_UART_Receive_DMA(&huart3, &RC_RxBuffer[0], 18);
+    motor_config();
+    gyro_init();
+    PTZ_mainSet(); // 设定云台初始轴
+
+    vTaskDelete(NULL);
+  }
+  /* USER CODE END _InitTask */
 }

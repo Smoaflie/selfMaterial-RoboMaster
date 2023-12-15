@@ -7,7 +7,7 @@
 
 RC_DataTypeDef RC_CtrlData;
 uint8_t RC_RxBuffer[18];
-// float t_speed = 0; // 测试PID用的参数
+
 
 // 计算距离原点的距离
 static double calculateDistance(uint16_t x_t, uint16_t y_t)
@@ -73,6 +73,10 @@ void RC_RecevieAnalysis(uint8_t *pData)
 
     RC_CtrlData.key.v = ((int16_t)pData[14]);
 
+    // RC_DataAnalyse_toPolar();
+}
+
+void RC_DataAnalyse_toPolar(void){
     /* 将摇杆数据转换为极坐标 */
     RC_CtrlData.Ctrl.ROCKER_L_DEG = calculateRadian(RC_CtrlData.rc.ch2, RC_CtrlData.rc.ch3);
     RC_CtrlData.Ctrl.ROCKER_R_DEG = calculateRadian(RC_CtrlData.rc.ch0, RC_CtrlData.rc.ch1);
@@ -84,7 +88,6 @@ void RC_RecevieAnalysis(uint8_t *pData)
     if (RC_CtrlData.Ctrl.ROCKER_L == 0) RC_CtrlData.Ctrl.ROCKER_L_DEG = 0;
     if (RC_CtrlData.Ctrl.ROCKER_R == 0) RC_CtrlData.Ctrl.ROCKER_R_DEG = 0;
 }
-
 /************************************************************
  * @brief 获取控制器数据值
  *        推度使用百分比表示，角度使用角度制表示
@@ -112,57 +115,60 @@ uint16_t RC_GetData(RC_DataType type)
 }
 
 /* 通过控制器设置电机速度 */
-void RC_CtrlChassis(void)
+void RC_CtrlCar(void)
 {
     static uint16_t L_speed = 1500; // 低速模式转速
     static uint16_t H_speed = 3000; // 高速模式转速
     static uint8_t PULLROD_flag;    // 拨杆
     PULLROD_flag = RC_GetData(RC_PULLROD);
 
-    // // 检测左0右1摇杆是否归零 跳变沿标志位（当归零时触发一次）,0为此前为0，1为此前大于0，2为上升沿，4为下降沿
-    // static uint8_t JumpEdge_flag[2];
-    // /* 跳变沿判断 */
-    // JumpEdge_flag[0]=JumpEdge_flag[0]<2?(((JumpEdge_flag[0]==1)^(RC_GetData(RC_ROCKER_L)>0))?0x02<<JumpEdge_flag[0]:JumpEdge_flag[0]):(RC_GetData(RC_ROCKER_L)>0?1:0);
-    // JumpEdge_flag[1]=JumpEdge_flag[1]<2?(((JumpEdge_flag[1]==1)^(RC_GetData(RC_ROCKER_R)>0))?0x02<<JumpEdge_flag[1]:JumpEdge_flag[1]):(RC_GetData(RC_ROCKER_R)>0?1:0);
-
     /* 控制器操作 */
-    gyro_calData();
     switch (PULLROD_flag) {
         case 0b00100010: // 双上 云台底盘能被正常控制，且底盘速度为正常模式
-            chasis_run_with_gimbal(L_speed * RC_GetData(RC_ROCKER_L) / 100, RC_CtrlData.Ctrl.ROCKER_L_DEG);
+            chassis_run_with_gimbal(L_speed);
             gimbal_move_by_controller();
-            // if(JumpEdge_flag[0]==4) motor[1].stop_flag=motor[2].stop_flag=motor[3].stop_flag=motor[4].stop_flag=1;
-            // if(JumpEdge_flag[1]==4) gimbal_yaw_motor.stop_flag=1;
             break;
         case 0b01000100: // 双下 云台无力，底盘速度保持为 0
-            chasis_run(0, 0, 0);
+            chassis_off();
             gimbal_down();
             break;
         case 0b00101000: // 左上右中 底盘速度为高速模式
-            chasis_run_with_gimbal(H_speed * RC_GetData(RC_ROCKER_L) / 100, RC_CtrlData.Ctrl.ROCKER_L_DEG);
+            chassis_run_with_gimbal(H_speed);
             gimbal_move_by_controller();
             break;
         case 0b00100100: // 左上右下 底盘小陀螺模式
-            chasis_run(L_speed * RC_GetData(RC_ROCKER_L) / 100, RC_CtrlData.Ctrl.ROCKER_L_DEG, 3000);
+            chassis_top(L_speed,2000);
             gimbal_move_by_controller();
             break;
         case 0b10000010: // 左中右上 自由移动云台
-            chasis_run(0, 0, 0);
+            chassis_off();
             gimbal_move_by_controller();
-            // PTZ_turn_bySpeed(9,t_speed);//调试pitch用
             break;
         case 0b10001000: // 双中 重新设置方向
+            chassis_off();
             gimbal_down();
-            gimbal_location_set();
+            gimbal_location_reset();
             break;
-        // case 0b10000100: // 左中右下 测试Yaw云台（正弦速度曲线）
-        //     gimbalFLAG = gimbal_ON;
-        //     chasis_run(0, 0, 0, 0);
-        //     float t=HAL_GetTick();
-        //     t_speed = 0.785*sin(1.884*t/1000)+1.305;
-        //     t_speed *=2;
-        //     PTZ_turn_bySpeed(5,t_speed);
-        //     gyro_setYaw();
-        //     break;
     }
+}
+
+/* 云台任务 放在freertos中 */
+void controller_task(void){
+    RC_DataAnalyse_toPolar();
+
+    RC_CtrlCar();
+}
+
+void _ControllerTask(void *argument)
+{
+  /* USER CODE BEGIN _ControllerTask */
+  /* Infinite loop */
+  for(;;)
+  {
+    controller_task();
+
+    vTaskResume(GyroTaskHandle);
+    osDelay(1);
+  }
+  /* USER CODE END _ControllerTask */
 }

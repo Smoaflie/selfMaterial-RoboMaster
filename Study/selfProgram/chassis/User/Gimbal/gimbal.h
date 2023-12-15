@@ -11,18 +11,20 @@ typedef enum{
 
 extern _gimbalFLAG gimbalFLAG;
 
-void gimbal_location_set(void);
+void gimbal_location_reset(void);
 
 void gimbal_down(void);
 
 void gimbal_move_by_controller(void);
 
 void PTZ_turn_byAngle(uint32_t motor_id,float angle);
-void PTZ_turn_bySpeed(uint32_t motor_id,float speed);
+void PTZ_turn_setSpeed(uint32_t motor_id,float speed);
 
 void PTZ_mainSet(void);
 int16_t PTZ_Get(void);
 float PTZ_RadianGet(void);
 float PTZ_mainRadianGet(void);
+
+void gimbal_task(void);
 
 #endif // !__GIMBAL_H

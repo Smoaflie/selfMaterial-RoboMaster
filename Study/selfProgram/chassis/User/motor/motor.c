@@ -34,7 +34,7 @@ void motor_config(){
     PID_struct_init(&chassis_motor[4].pid,10000,1000,0,8,0.1,0);
 
     PID_struct_init(&gimbal_yaw_motor.pid,30000,30000,0,8000,100,1000);
-    PID_struct_init(&gimbal_pitch_motor.pid,30000,30000,0,10000,10,1000);
+    PID_struct_init(&gimbal_pitch_motor.pid,30000,30000,0,8000,50,0);
 
     PID_struct_init(&YawPID,4,4,0,0.0001,0,0);//角度环  设置±1°死区
     PID_struct_init(&PitchPID,4,4,0,0.5,0,0);//角度环
@@ -64,13 +64,6 @@ void motor_data_analyze(ElectricMotor* p_motor,uint8_t data[]){
 
 /* PID速度环 设置电机控制电流 */
 void motor_control_current_set(ElectricMotor* p_motor){
-    // /* 急停 */
-    // if(p_motor->stop_flag==1){
-    //     p_motor->motor_control_current= - p_motor->rotor_torque_current;
-    //     p_motor->stop_flag=0;
-    //     return;
-    // }
-
     if(p_motor->type==MotorChassis){
         p_motor->motor_control_current=(int16_t)pid_calc(&p_motor->pid,p_motor->rotor_rotate_speed,p_motor->motor_target);
     }

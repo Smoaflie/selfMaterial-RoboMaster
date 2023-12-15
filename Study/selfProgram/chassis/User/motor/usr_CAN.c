@@ -46,11 +46,11 @@ void CAN_DataSent(CAN_HandleTypeDef* hcan,uint16_t StdId,uint16_t data1,uint16_t
 
     if (hcan->State == HAL_CAN_STATE_READY || hcan->State == HAL_CAN_STATE_LISTENING) //判断发送邮箱中是否存在空邮箱
     {
-        if (StdId == 0x200 && (hcan->Instance->TSR & CAN_TSR_TME0) != 0U)
+        if (StdId == 0x200)
                 HAL_CAN_AddTxMessage(hcan, &CAN_Tx_Message, CAN_Tx_Data, (uint32_t*)CAN_TX_MAILBOX0);//将自定义报文添加到邮箱中
-        else if (StdId == 0x1ff && (hcan->Instance->TSR & CAN_TSR_TME1) != 0U)
+        else if (StdId == 0x1ff)
                 HAL_CAN_AddTxMessage(hcan, &CAN_Tx_Message, CAN_Tx_Data, (uint32_t*)CAN_TX_MAILBOX1);//将自定义报文添加到邮箱中
-        else if (StdId == 0x2ff && (hcan->Instance->TSR & CAN_TSR_TME2) != 0U)
+        else if (StdId == 0x2ff)
                 HAL_CAN_AddTxMessage(hcan, &CAN_Tx_Message, CAN_Tx_Data, (uint32_t*)CAN_TX_MAILBOX2);//将自定义报文添加到邮箱中  
     }
 }

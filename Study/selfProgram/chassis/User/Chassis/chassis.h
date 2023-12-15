@@ -3,7 +3,10 @@
 
 #include "usr_main.h"
 
-void chasis_run(float speed,float radian,float vo);
-void chasis_run_with_gimbal(float speed,float radian);
+void chassis_off(void);
+void chassis_run_with_gimbal(uint16_t speed);
+void chassis_top(uint16_t f_speed,uint16_t t_speed);
+
+void chassis_task(void);
 
 #endif // !__CHASSIS_H_
