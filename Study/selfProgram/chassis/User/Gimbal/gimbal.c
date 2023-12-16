@@ -3,6 +3,7 @@
 #include "motor.h"
 #include "controller.h"
 #include "gyro.h"
+#include <math.h>
 
 #define gimbal_Yaw 5
 #define gimbal_Pitch 9
@@ -13,21 +14,25 @@ float t_speed = 0; // 测试PID用的参数
 /* 控制器控制云台移动 */
 void gimbal_move_by_controller(void){
     gimbalFLAG = gimbal_HOLD;
-    if (RC_GetData(RC_ROCKER_L) > 1) {
-        PTZ_turn_setSpeed(gimbal_Yaw, -((int16_t)RC_CtrlData.rc.ch2 - 1024) * 4 / 660.0);
-        gyro_setYaw();
-    }
-    if (RC_GetData(RC_ROCKER_L) > 1) {
+    
+    // float t=HAL_GetTick();
+    // t_speed = 0.785*sin(1.884*t/1000)+1.305;
+    // t_speed *=4;
+    // PTZ_turn_setSpeed(gimbal_Yaw, t_speed);
+
+        /* Yaw轴 */
+    
+        PTZ_turn_setAngle(gimbal_Yaw, ((int16_t)RC_CtrlData.rc.ch2 - 1024) * 20  / 660.0);
+
+        /* Pitch轴 */
         /* 人工限位 机械角度手动获取设置 */
-        if(gimbal_pitch_motor.rotor_mechanical_angle > 4755 || gimbal_pitch_motor.rotor_mechanical_angle < 3570)
+        if((gimbal_pitch_motor.rotor_mechanical_angle > 4755 && ((int16_t)RC_CtrlData.rc.ch3 - 1024) < 0) || (gimbal_pitch_motor.rotor_mechanical_angle < 3570 && ((int16_t)RC_CtrlData.rc.ch3 - 1024) > 0))
             PTZ_turn_setSpeed(gimbal_Pitch,0);
         else 
-            PTZ_turn_setSpeed(gimbal_Pitch, ((int16_t)RC_CtrlData.rc.ch3 - 1024) * 2 / 660.0);
-        gyro_setPitch();
+            PTZ_turn_setAngle(gimbal_Pitch, ((int16_t)RC_CtrlData.rc.ch3 - 1024) * 0.5 / 660.0);
 
-        
-    }
-    // PTZ_turn_setSpeed(gimbal_Pitch, t_speed);
+        // PTZ_turn_setSpeed(gimbal_Pitch, t_speed);
+    
 }
 
 /* 云台无力（关闭） */
@@ -47,6 +52,16 @@ void PTZ_turn_byAngle(uint32_t motor_id,float angle){
     motor_targetSpeedSet_ByANGLE(motor_id,angle);
 }
 
+//设置云台角度
+void PTZ_turn_setAngle(uint32_t motor_id,float angle){
+    extern fp32 yaw_t,pitch_t;
+    if(motor_id==gimbal_Yaw)
+        yaw_t = angle;
+    if(motor_id==gimbal_Pitch)
+        pitch_t = angle;
+}
+
+//设置云台速度
 void PTZ_turn_setSpeed(uint32_t motor_id,float speed){
     motor_rotate_speed_set(motor_id,speed);
 }
@@ -89,42 +104,6 @@ void gimbal_task(void){
     motor_control_current_set(&gimbal_pitch_motor);
 
     while(HAL_CAN_GetTxMailboxesFreeLevel(&hcan1) != 3);
-    CAN_DataSent(&hcan1,0x2FF,gimbal_pitch_motor.motor_control_current,0,0,0);
+    // CAN_DataSent(&hcan1,0x2FF,gimbal_pitch_motor.motor_control_current,0,0,0);
     CAN_DataSent(&hcan1,0x1ff,gimbal_yaw_motor.motor_control_current,0,0,0);
 }
-
-void _GimbalTask(void *argument)
-{
-  /* USER CODE BEGIN _GimbalTask */
-  /* Infinite loop */
-  for(;;)
-  {
-    gimbal_task();
-    
-    vTaskSuspend(NULL);
-    // osDelay(1);
-  }
-  /* USER CODE END _GimbalTask */
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

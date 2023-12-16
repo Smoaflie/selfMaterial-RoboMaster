@@ -72,21 +72,20 @@ void RC_RecevieAnalysis(uint8_t *pData)
     RC_CtrlData.mouse.press_r = pData[13];
 
     RC_CtrlData.key.v = ((int16_t)pData[14]);
-
-    // RC_DataAnalyse_toPolar();
 }
 
 void RC_DataAnalyse_toPolar(void){
+    /* 人造摇杆死区 */
+    uint8_t val = 10;
+    uint16_t* ch[4]={&RC_CtrlData.rc.ch0,&RC_CtrlData.rc.ch1,&RC_CtrlData.rc.ch2,&RC_CtrlData.rc.ch3};
+    for(int i = 0; i < 4 ; i++) 
+        if(*ch[i] < 1024+val && *ch[i] > 1024-val )   *ch[i] = 1024;
+    
     /* 将摇杆数据转换为极坐标 */
     RC_CtrlData.Ctrl.ROCKER_L_DEG = calculateRadian(RC_CtrlData.rc.ch2, RC_CtrlData.rc.ch3);
     RC_CtrlData.Ctrl.ROCKER_R_DEG = calculateRadian(RC_CtrlData.rc.ch0, RC_CtrlData.rc.ch1);
     RC_CtrlData.Ctrl.ROCKER_L     = calculateDistance(RC_CtrlData.rc.ch2, RC_CtrlData.rc.ch3) / (660 / cos(limitRadian(RC_CtrlData.Ctrl.ROCKER_L_DEG)));
     RC_CtrlData.Ctrl.ROCKER_R     = calculateDistance(RC_CtrlData.rc.ch0, RC_CtrlData.rc.ch1) / (660 / cos(limitRadian(RC_CtrlData.Ctrl.ROCKER_R_DEG)));
-
-    /* 人造死区 */
-    // 摇杆归中时角度并不是完全的0……
-    if (RC_CtrlData.Ctrl.ROCKER_L == 0) RC_CtrlData.Ctrl.ROCKER_L_DEG = 0;
-    if (RC_CtrlData.Ctrl.ROCKER_R == 0) RC_CtrlData.Ctrl.ROCKER_R_DEG = 0;
 }
 /************************************************************
  * @brief 获取控制器数据值
@@ -122,6 +121,9 @@ void RC_CtrlCar(void)
     static uint8_t PULLROD_flag;    // 拨杆
     PULLROD_flag = RC_GetData(RC_PULLROD);
 
+    float t=HAL_GetTick();
+    float t_speed = 0.785*sin(1.884*t/1000)+1.305;
+
     /* 控制器操作 */
     switch (PULLROD_flag) {
         case 0b00100010: // 双上 云台底盘能被正常控制，且底盘速度为正常模式
@@ -137,7 +139,7 @@ void RC_CtrlCar(void)
             gimbal_move_by_controller();
             break;
         case 0b00100100: // 左上右下 底盘小陀螺模式
-            chassis_top(L_speed,2000);
+            chassis_top(L_speed,t_speed*5000);
             gimbal_move_by_controller();
             break;
         case 0b10000010: // 左中右上 自由移动云台
@@ -159,16 +161,3 @@ void controller_task(void){
     RC_CtrlCar();
 }
 
-void _ControllerTask(void *argument)
-{
-  /* USER CODE BEGIN _ControllerTask */
-  /* Infinite loop */
-  for(;;)
-  {
-    controller_task();
-
-    vTaskResume(GyroTaskHandle);
-    osDelay(1);
-  }
-  /* USER CODE END _ControllerTask */
-}

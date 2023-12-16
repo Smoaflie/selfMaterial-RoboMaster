@@ -33,11 +33,11 @@ void motor_config(){
     PID_struct_init(&chassis_motor[3].pid,10000,1000,0,8,0.1,0);
     PID_struct_init(&chassis_motor[4].pid,10000,1000,0,8,0.1,0);
 
-    PID_struct_init(&gimbal_yaw_motor.pid,30000,30000,0,8000,100,1000);
-    PID_struct_init(&gimbal_pitch_motor.pid,30000,30000,0,8000,50,0);
+    PID_struct_init(&gimbal_yaw_motor.pid,30000,5000,0,8000,100,1000);
+    PID_struct_init(&gimbal_pitch_motor.pid,30000,5000,0,10000,10,5000);
 
-    PID_struct_init(&YawPID,4,4,0,0.0001,0,0);//角度环  设置±1°死区
-    PID_struct_init(&PitchPID,4,4,0,0.5,0,0);//角度环
+    PID_struct_init(&YawPID,4,4,0,0.3,0,0);//角度环
+    PID_struct_init(&PitchPID,4,1,0,0.5,0.5,0.01);//角度环
 }
 
 /* 获取电机ID对应的电机数据指针 */
@@ -68,7 +68,6 @@ void motor_control_current_set(ElectricMotor* p_motor){
         p_motor->motor_control_current=(int16_t)pid_calc(&p_motor->pid,p_motor->rotor_rotate_speed,p_motor->motor_target);
     }
     if(p_motor->type==MotorGimbal){
-        gyro_calData();
         if(p_motor==&gimbal_yaw_motor) 
             p_motor->motor_control_current = (int16_t)pid_calc(&p_motor->pid,- gyro_getYawGyro(),p_motor->motor_target);
         else if(p_motor==&gimbal_pitch_motor)    
@@ -79,17 +78,18 @@ void motor_control_current_set(ElectricMotor* p_motor){
     
 }
 
-/* 直接设置电机转速 */
+/* 设置电机转速 */
 void motor_rotate_speed_set(uint32_t input_motor_id,float rotate_speed){
     ElectricMotor* p_motor = motor_getID(input_motor_id);
     p_motor->motor_target=rotate_speed;
 }
+
 /* PID角度环 设置电机目标转速 *///数据由陀螺仪提供
 void motor_targetSpeedSet_ByANGLE(uint32_t input_motor_id,float angle_t){
     ElectricMotor* p_motor = motor_getID(input_motor_id);
     while(!(angle_t>=0&&angle_t<=360)){    //限定范围
         if(angle_t>360) angle_t-=360;
-        if(angle_t<0)   angle_t+=360;
+        else if(angle_t<0)   angle_t+=360;
     }
     float vo;   //电机速度
 
@@ -100,32 +100,4 @@ void motor_targetSpeedSet_ByANGLE(uint32_t input_motor_id,float angle_t){
         vo = pid_calc_circle(&PitchPID,gyro_getPitch(),angle_t,360);   
     else    vo=0;
     p_motor->motor_target=vo;
-}
-
-/* CAN通讯 向电调发送控制电流/电压参数 */
-void motor_can_send_control_current(void){
-    CAN_DataSent(&hcan1,0x200,chassis_motor[1].motor_control_current,chassis_motor[2].motor_control_current,chassis_motor[3].motor_control_current,chassis_motor[4].motor_control_current);
-    while(HAL_CAN_GetTxMailboxesFreeLevel(&hcan1) != 3);
-    if(!(gimbalFLAG==gimbal_OFF)){
-        CAN_DataSent(&hcan1,0x2FF,gimbal_pitch_motor.motor_control_current,0,0,0);
-        CAN_DataSent(&hcan1,0x1ff,gimbal_yaw_motor.motor_control_current,0,0,0);
-    }
-}
-
-//计算各电机所需电流值并发送(使车辆按指令行进)
-void car_run(void){
-    // gyro_calData();
-    for(int i=1;i<10;i++){
-        ElectricMotor *p_motor=motor_getID(i);
-        if(p_motor == NULL) continue;
-
-        if(gimbalFLAG==gimbal_HOLD){
-          //保持模式，保持云台指向一定方向
-          if(p_motor==&gimbal_yaw_motor && p_motor->motor_target==0)
-            {motor_targetSpeedSet_ByANGLE(5,0);}
-        }
-        if(p_motor==&gimbal_pitch_motor && p_motor->motor_target==0)  motor_targetSpeedSet_ByANGLE(9,0);
-        motor_control_current_set(p_motor);
-    }
-    motor_can_send_control_current();
 }

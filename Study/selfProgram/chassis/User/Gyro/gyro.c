@@ -37,8 +37,8 @@ void gyro_calData(void){
     d_t=n_t - l_t;
     l_t=n_t;
 	/* 通过积分计算角度 */
-	yaw_t -= (kalmanFilter(gyro[2]-gyro_offset[2],&P,&x_estimated) * d_t/1000);		/* 积分结算Yaw轴角度 */
-    pitch_t += (kalmanFilter(gyro[1]-gyro_offset[1],&P_p,&x_estimated_p) * d_t/1000);		/* 积分结算Pitch轴角度 */
+	yaw_t -= (kalmanFilter(gyro[2]-gyro_offset[2],&P,&x_estimated) * d_t/1000 * t);		/* 积分结算Yaw轴角度 */
+    pitch_t += (kalmanFilter(gyro[1]-gyro_offset[1],&P_p,&x_estimated_p) * d_t/1000 * t);		/* 积分结算Pitch轴角度 */
   
     // yaw/=360;pitch/=360;
     // yaw=yaw>0?yaw:-yaw;
@@ -47,7 +47,7 @@ void gyro_calData(void){
 
 /* 获取yaw角度 */ 
 float gyro_getYAW(void){
-    yaw = yaw_t * t;
+    yaw = yaw_t;
     /* 将角度限制在0-360° */
 	while(yaw>360) yaw-=360;
     while(yaw<0)  yaw+=360; 
@@ -56,7 +56,7 @@ float gyro_getYAW(void){
 }
 /* 获取Pitch角度 */
 float gyro_getPitch(void){
-    pitch=pitch_t*t;
+    pitch=pitch_t;
     /* 将角度限制在0-360° */
 	while(pitch>360) pitch-=360;
     while(pitch<0)  pitch+=360; 

@@ -85,16 +85,3 @@ void chassis_task(void){
     chasis_run();
 }
 
-void _ChassisTask(void *argument)
-{
-  /* USER CODE BEGIN _ChassisTask */
-  /* Infinite loop */
-  for(;;)
-  {
-    chassis_task();
-
-    vTaskSuspend(NULL);
-    // osDelay(1);
-  }
-  /* USER CODE END _ChassisTask */
-}

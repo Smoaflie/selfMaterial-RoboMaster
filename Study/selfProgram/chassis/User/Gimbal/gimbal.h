@@ -18,7 +18,9 @@ void gimbal_down(void);
 void gimbal_move_by_controller(void);
 
 void PTZ_turn_byAngle(uint32_t motor_id,float angle);
+
 void PTZ_turn_setSpeed(uint32_t motor_id,float speed);
+void PTZ_turn_setAngle(uint32_t motor_id,float angle);
 
 void PTZ_mainSet(void);
 int16_t PTZ_Get(void);
