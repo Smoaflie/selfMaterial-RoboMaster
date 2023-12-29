@@ -1,17 +1,14 @@
-/************************************************************
- * @file pid.h
- * @author DJI
- * @brief PID计算
- * @version 1.0
- * @date 2023-11-30
- * @note    该部分代码来自DJI官方例程
- * 
- * @copyright GNU General Public License v3.0
-************************************************************/
+/*
+ * @Author: Smoaflie
+ * @Date: 2023-12-29
+ * @LastEditors: Smoaflie
+ * @LastEditTime: 2023-11-10 22:20:47
+ * @Description: 
+ */
 #ifndef __PID_H
 #define __PID_H
 
-#include "main.h"
+#include "usr_main.h"
 
 enum
 {

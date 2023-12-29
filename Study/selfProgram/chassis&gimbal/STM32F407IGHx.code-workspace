@@ -1,0 +1,28 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "files.associations": {
+            "usr_main.h": "c",
+            "can.h": "c",
+            "freertos.h": "c",
+            "cmsis_os2.h": "c",
+            "usart.h": "c",
+            "main.h": "c",
+            "task.h": "c",
+            "gyro.h": "c",
+            "pid.h": "c",
+            "gimbal.h": "c",
+            "motor.h": "c",
+            "controller.h": "c",
+            "math.h": "c",
+            "chassis.h": "c",
+            "usr_can.h": "c",
+            "tim.h": "c"
+        }
+    },
+    "extensions": {}
+}

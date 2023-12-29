@@ -65,6 +65,8 @@ extern uint8_t RC_RxBuffer[18];
 //接收处理控制器数据-放在接收中断中
 void RC_RecevieAnalysis(uint8_t *pData);
 
+void RC_DataAnalyse_toPolar(void);
+
 //供其他函数获取控制器数据
 uint16_t RC_GetData(RC_DataType type);
 

@@ -4,7 +4,10 @@
 RC_DataTypeDef RC_CtrlData;
 uint8_t RC_RxBuffer[18];
 
+#ifndef M_PI
 #define M_PI 3.1416
+#endif
+
 #define ABS(x) (x>0?x:-x)
 
 // 计算距离原点的距离
@@ -71,6 +74,23 @@ void RC_RecevieAnalysis(uint8_t *pData){
     RC_CtrlData.Ctrl.ROCKER_R_DEG=calculateRadian(RC_CtrlData.rc.ch0,RC_CtrlData.rc.ch1);
     RC_CtrlData.Ctrl.ROCKER_L=calculateDistance(RC_CtrlData.rc.ch2,RC_CtrlData.rc.ch3)/(660/cos(limitRadian(RC_CtrlData.Ctrl.ROCKER_L_DEG)));
     RC_CtrlData.Ctrl.ROCKER_R=calculateDistance(RC_CtrlData.rc.ch0,RC_CtrlData.rc.ch1)/(660/cos(limitRadian(RC_CtrlData.Ctrl.ROCKER_R_DEG)));
+}
+
+/************************************************************
+ * @brief 将控制器摇杆数据解析为极坐标
+************************************************************/
+void RC_DataAnalyse_toPolar(void){
+    /* 人造摇杆死区 */
+    uint8_t val = 10;
+    uint16_t* ch[4]={&RC_CtrlData.rc.ch0,&RC_CtrlData.rc.ch1,&RC_CtrlData.rc.ch2,&RC_CtrlData.rc.ch3};
+    for(int i = 0; i < 4 ; i++) 
+        if(*ch[i] < 1024+val && *ch[i] > 1024-val )   *ch[i] = 1024;
+    
+    /* 将摇杆数据转换为极坐标 */
+    RC_CtrlData.Ctrl.ROCKER_L_DEG = calculateRadian(RC_CtrlData.rc.ch2, RC_CtrlData.rc.ch3);
+    RC_CtrlData.Ctrl.ROCKER_R_DEG = calculateRadian(RC_CtrlData.rc.ch0, RC_CtrlData.rc.ch1);
+    RC_CtrlData.Ctrl.ROCKER_L     = calculateDistance(RC_CtrlData.rc.ch2, RC_CtrlData.rc.ch3) / (660 / cos(limitRadian(RC_CtrlData.Ctrl.ROCKER_L_DEG)));
+    RC_CtrlData.Ctrl.ROCKER_R     = calculateDistance(RC_CtrlData.rc.ch0, RC_CtrlData.rc.ch1) / (660 / cos(limitRadian(RC_CtrlData.Ctrl.ROCKER_R_DEG)));
 }
 
 /************************************************************
