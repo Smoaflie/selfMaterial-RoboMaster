@@ -20,12 +20,12 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
      */
     if(huart==&huart1){
         uint8_t pData;
-        HAL_UART_Transmit_DMA(&huart6,&pData,1);
+        HAL_UART_Transmit_DMA(&huart6,Rx1Buffer,Rx1Buffer_max);
         HAL_UART_Receive_DMA(&huart1, Rx1Buffer, Rx1Buffer_max);
     }
     if(huart==&huart6){
         uint8_t pData;
-        HAL_UART_Transmit_DMA(&huart1,&pData,1);
+        HAL_UART_Transmit_DMA(&huart1,Rx6Buffer,Rx6Buffer_max);
         HAL_UART_Receive_DMA(&huart6, Rx6Buffer, Rx6Buffer_max);
     }
 }

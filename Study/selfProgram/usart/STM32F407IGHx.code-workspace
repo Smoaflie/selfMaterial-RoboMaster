@@ -1,0 +1,14 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "files.associations": {
+            "tim.h": "c",
+            "led.h": "c"
+        }
+    },
+    "extensions": {}
+}

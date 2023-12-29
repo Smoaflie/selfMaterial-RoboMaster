@@ -4,6 +4,10 @@
 
 //设置LED灯颜色
 void LED_Color_Set(uint8_t Color);
+
+void LED_On(void);
+void LED_Off(void);
+
 void LED_lumx_set(float lumx);
 void LED_freq_set(uint32_t freq);
 void LED_lumx_control(void);

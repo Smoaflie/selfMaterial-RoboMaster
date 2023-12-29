@@ -1,8 +1,11 @@
 #include "usr_main.h"
 
+#include "delay.h"
+#include "LED.h"
+
 int usr_main(void){
     // ! NOTE:while死循环不能删除
-    
+    HAL_TIM_Base_Start_IT(&htim4);
     HAL_TIM_Base_Start_IT(&htim11);
 
     while(1){
@@ -21,6 +24,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
    */
   if(htim==&htim11){
     TIM11_IncTick();
+    LED_lumx_control();
     LED_freq_control();
   }
 }
@@ -36,6 +40,6 @@ void CAN_DataSent(CAN_HandleTypeDef* hcan,CAN_TxHeaderTypeDef* CAN_Tx_Message,ui
 
     if (hcan->State == HAL_CAN_STATE_READY || hcan->State == HAL_CAN_STATE_LISTENING) //判断发送邮箱中是否存在空邮箱
     {
-        HAL_CAN_AddTxMessage(hcan, &CAN_Tx_Message, tx_buf, (uint32_t*)CAN_TX_MAILBOX2);//将自定义报文添加到邮箱中  
+        HAL_CAN_AddTxMessage(hcan, CAN_Tx_Message, tx_buf, (uint32_t*)CAN_TX_MAILBOX2);//将自定义报文添加到邮箱中  
     }
 }
